@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from flask_mongoengine import MongoEngine
 
-from .models.user import User
+from models.user import User
 
 application = Flask(__name__)
 
@@ -28,14 +28,14 @@ db = MongoEngine(application)
 @application.route('/')
 def index():
     # create a sample user to db
-    user = User(
-        username="ychen",
-        name="yan chen",
-        email="ychen1116@gmail.com",
-        password_hash="abc123",
-        age=20
-    )
-    user.save()
+    # user = User(
+    #     username="ychen",
+    #     name="yan chen",
+    #     email="ychen1116@gmail.com",
+    #     password_hash="abc123",
+    #     age=20
+    # )
+    # user.save()
 
     return 'Hellow World!'
 

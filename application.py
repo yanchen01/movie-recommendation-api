@@ -1,10 +1,24 @@
 import os
+import logging
+
 from flask import Flask
 from flask_mongoengine import MongoEngine
 
 from models.user import User
 
 application = Flask(__name__)
+
+
+# Create a custom logger
+logger = logging.getLogger(__name__)
+log_handler = logging.FileHandler('app.log')
+log_handler.setLevel(logging.WARNING)
+log_format = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+log_handler.setFormatter(log_format)
+logger.addHandler(log_handler)
+
+print(application.env)
 
 # determine local or production db
 if application.env == "production":
@@ -13,14 +27,16 @@ if application.env == "production":
     application.config['MONGODB_SETTINGS'] = {
         "host": DB_CONNECT_STRING
     }
-    print('Cloud Database Connected')
+    logger.warning('Cloud Database Connected')
 else:
     # if in dev env
     application.config['MONGODB_SETTINGS'] = {
         'db': 'movie-rec',
         'host': 'mongodb://localhost/movie-rec-db'
     }
-    print('Local Database Connected')
+    logger.warning('Local Database Connected')
+    
+
 
 db = MongoEngine(application)
 
@@ -28,14 +44,14 @@ db = MongoEngine(application)
 @application.route('/')
 def index():
     # create a sample user to db
-    # user = User(
-    #     username="ychen",
-    #     name="yan chen",
-    #     email="ychen1116@gmail.com",
-    #     password_hash="abc123",
-    #     age=20
-    # )
-    # user.save()
+    user = User(
+        username="ychen",
+        name="yan chen",
+        email="ychen1116@gmail.com",
+        password_hash="abc123",
+        age=20
+    )
+    user.save()
 
     return 'Hellow World!'
 

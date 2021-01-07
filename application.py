@@ -10,15 +10,14 @@ application = Flask(__name__)
 
 
 # Create a custom logger
-logger = logging.getLogger(__name__)
 log_handler = logging.FileHandler('app.log')
 log_handler.setLevel(logging.WARNING)
 log_format = logging.Formatter(
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log_handler.setFormatter(log_format)
+logger = logging.getLogger(__name__)
 logger.addHandler(log_handler)
 
-print(application.env)
 
 # determine local or production db
 if application.env == "production":
@@ -35,7 +34,6 @@ else:
         'host': 'mongodb://localhost/movie-rec-db'
     }
     logger.warning('Local Database Connected')
-    
 
 
 db = MongoEngine(application)

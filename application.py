@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from flask_mongoengine import MongoEngine
 
-from .Models.users import User
+from .models.user import User
 
 application = Flask(__name__)
 
@@ -13,6 +13,7 @@ if application.env == "production":
     application.config['MONGODB_SETTINGS'] = {
         "host": DB_CONNECT_STRING
     }
+    print('Cloud Database Connected')
 else:
     # if in dev env
     application.config['MONGODB_SETTINGS'] = {
@@ -26,6 +27,7 @@ db = MongoEngine(application)
 
 @application.route('/')
 def index():
+    # create a sample user to db
     user = User(
         username="ychen",
         name="yan chen",

@@ -52,6 +52,5 @@ class UserRegister(Resource):
             name=data['name']
         )
 
-        new_user.json()
         new_user.save()
         return {"message": "User created successfully."}, 400

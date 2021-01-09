@@ -15,5 +15,6 @@ class User(me.Document):
     def json(self):
         return {
             'name': self.name,
+            'username': self.username,
             'email': self.email
         }

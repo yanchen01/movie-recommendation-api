@@ -164,9 +164,7 @@ class User(Resource):
             405: "Unsuccessful update."
         },
         params={
-            'username': {'in': 'json', 'required': True},
-            'email': {'in': 'json', 'required': True},
-            'name': {'in': 'json', 'required': True},
+            'username': {'in': 'json', 'required': True}
         }
     )
     @jwt_required

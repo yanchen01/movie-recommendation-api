@@ -1,8 +1,9 @@
+from resources.user import user_ns
 import os
 import logging
 
-from flask import Flask, jsonify
-from flask_restful import Api
+from flask import Flask, jsonify, Blueprint
+from flask_restplus import Api
 from flask_jwt_extended import JWTManager
 
 from flask_mongoengine import MongoEngine
@@ -11,7 +12,12 @@ from models.user import User
 from resources.user import UserRegister
 
 application = Flask(__name__)
-api = Api(application)
+api_blueprint = Blueprint('api', __name__, url_prefix='/api')
+api = Api(api_blueprint, title='Movie Recommendation API', doc='/swagger')
+
+api.add_namespace(user_ns)
+
+application.register_blueprint(api_blueprint)
 
 
 """
@@ -109,9 +115,6 @@ def revoked_token_callback():
 @application.route('/')
 def index():
     return 'Hellow World!'
-
-
-api.add_resource(UserRegister, '/register')
 
 
 # run the app.

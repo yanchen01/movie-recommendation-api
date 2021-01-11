@@ -36,6 +36,19 @@ _user_parser.add_argument('name',
                           help="This field cannot be blank."
                           )
 
+_user_login_parser = reqparse.RequestParser()
+_user_login_parser.add_argument('email',
+                                type=str,
+                                required=True,
+                                help="This field cannot be blank."
+                                )
+_user_login_parser.add_argument('password',
+                                type=str,
+                                required=True,
+                                help="This field cannot be blank."
+                                )
+
+
 bcrypt = Bcrypt()
 
 
@@ -46,7 +59,7 @@ class UserRegister(Resource):
     """
     @user_ns.doc(
         responses={
-            200: "Signup successful",
+            200: "Signup successful.",
             400: "There's already an account with the provided email.",
             403: "Signup unsuccessful. Please try again."
         },
@@ -61,7 +74,8 @@ class UserRegister(Resource):
         data = _user_parser.parse_args()
 
         # check if current user already exist
-        user = UserModel.objects(email=data['email'])
+        user = UserModel.objects(
+            email=data['email'], username=data['username'])
 
         if user:
             return {"message": "A user with that email already exists"}, 400
@@ -99,7 +113,7 @@ class UserLogin(Resource):
         }
     )
     def post(self):
-        data = _user_parser.parse_args()
+        data = _user_login_parser.parse_args()
         try:
             user = UserModel.objects(email=data['email']).get()
             if bcrypt.check_password_hash(user.password_hash, data['password']):
@@ -108,8 +122,10 @@ class UserLogin(Resource):
                 refresh_token = create_refresh_token(user.username)
 
                 return {
-                    'access_token': access_token,
-                    'refresh_token': refresh_token
+                    'message': {
+                        'access_token': access_token,
+                        'refresh_token': refresh_token
+                    }
                 }, 200
 
             return {"message": "Invalid Credentials!"}, 401

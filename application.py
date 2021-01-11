@@ -2,6 +2,7 @@ import os
 import logging
 
 from flask import Flask, jsonify, Blueprint
+from flask_cors import CORS
 from flask_restplus import Api
 from flask_jwt_extended import JWTManager
 
@@ -13,6 +14,7 @@ from resources.user import UserRegister
 
 
 application = Flask(__name__)
+CORS(application)
 api_blueprint = Blueprint('api', __name__, url_prefix='/api')
 api = Api(api_blueprint, title='Movie Recommendation API', doc='/swagger')
 

@@ -18,21 +18,25 @@ _user_parser = reqparse.RequestParser()
 _user_parser.add_argument('username',
                           type=str,
                           required=True,
+                          location=['form', 'json'],
                           help="This field cannot be blank."
                           )
 _user_parser.add_argument('email',
                           type=str,
                           required=True,
+                          location=['form', 'json'],
                           help="This field cannot be blank."
                           )
 _user_parser.add_argument('password',
                           type=str,
                           required=True,
+                          location=['form', 'json'],
                           help="This field cannot be blank."
                           )
 _user_parser.add_argument('name',
                           type=str,
                           required=True,
+                          location=['form', 'json'],
                           help="This field cannot be blank."
                           )
 
@@ -40,11 +44,13 @@ _user_login_parser = reqparse.RequestParser()
 _user_login_parser.add_argument('email',
                                 type=str,
                                 required=True,
+                                location=['form', 'json'],
                                 help="This field cannot be blank."
                                 )
 _user_login_parser.add_argument('password',
                                 type=str,
                                 required=True,
+                                location=['form', 'json'],
                                 help="This field cannot be blank."
                                 )
 
@@ -64,10 +70,10 @@ class UserRegister(Resource):
             403: "Signup unsuccessful. Please try again."
         },
         params={
-            'username': {'in': 'json', 'required': True},
-            'email': {'in': 'json', 'required': True},
-            'password': {'in': 'json', 'required': True},
-            'name': {'in': 'json', 'required': True},
+            'username': {'in': 'formData', 'required': True},
+            'email': {'in': 'formData', 'required': True},
+            'password': {'in': 'formData', 'required': True},
+            'name': {'in': 'formData', 'required': True},
         }
     )
     def post(self):
@@ -108,8 +114,8 @@ class UserLogin(Resource):
             403: "Log in unsuccessful. Please try again."
         },
         params={
-            'email': {'in': 'json', 'required': True},
-            'password': {'in': 'json', 'required': True},
+            'email': {'in': 'formData', 'required': True},
+            'password': {'in': 'formData', 'required': True},
         }
     )
     def post(self):
@@ -178,7 +184,7 @@ class User(Resource):
             405: "Unsuccessful update."
         },
         params={
-            'username': {'in': 'json', 'required': True}
+            'username': {'in': 'formData', 'required': True}
         }
     )
     @jwt_required

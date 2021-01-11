@@ -1,4 +1,3 @@
-from resources.user import user_ns
 import os
 import logging
 
@@ -9,12 +8,17 @@ from flask_jwt_extended import JWTManager
 from flask_mongoengine import MongoEngine
 from models.user import User
 
+from resources.user import user_ns
 from resources.user import UserRegister
+
 
 application = Flask(__name__)
 api_blueprint = Blueprint('api', __name__, url_prefix='/api')
 api = Api(api_blueprint, title='Movie Recommendation API', doc='/swagger')
 
+""" 
+Namespace registering
+"""
 api.add_namespace(user_ns)
 
 application.register_blueprint(api_blueprint)

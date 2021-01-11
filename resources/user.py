@@ -94,10 +94,8 @@ class UserLogin(Resource):
             403: "Log in unsuccessful. Please try again."
         },
         params={
-            'username': {'in': 'json', 'required': True},
             'email': {'in': 'json', 'required': True},
             'password': {'in': 'json', 'required': True},
-            'name': {'in': 'json', 'required': True},
         }
     )
     def post(self):

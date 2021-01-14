@@ -37,7 +37,8 @@ def load_recommendations():
     """
     Service functions for recommendation engine
     """
-    item_similarity_df = pd.read_csv('./static/item_similarity_df.csv')
+    item_similarity_df = pd.read_csv('./static/item_similarity_df.csv', index_col=0)
+    print(item_similarity_df.head(10))
     return item_similarity_df
 
 

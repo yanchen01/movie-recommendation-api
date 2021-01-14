@@ -4,26 +4,44 @@ import logging
 from flask import Flask, jsonify, Blueprint
 from flask_cors import CORS
 from flask_restplus import Api
+from flask_caching import Cache
 from flask_jwt_extended import JWTManager
+
+
+from resources import api_blueprint
+
 
 from flask_mongoengine import MongoEngine
 from models.user import User
 
-from resources.user import user_ns
-from resources.user import UserRegister
+
+import pandas as pd
 
 
 application = Flask(__name__)
-CORS(application)
-api_blueprint = Blueprint('api', __name__, url_prefix='/api')
-api = Api(api_blueprint, title='Movie Recommendation API', doc='/swagger')
-
-""" 
-Namespace registering
-"""
-api.add_namespace(user_ns)
-
 application.register_blueprint(api_blueprint)
+
+CORS(application)
+
+
+"""
+Caching config0
+"""
+application.config['CACHE_TYPE'] = 'simple'
+application.config['CACHE_DEFAULT_TIMEOUT'] = 300
+cache = Cache(application)
+
+
+@cache.cached(timeout=50, key_prefix='load_recommendations')
+def load_recommendations():
+    """
+    Service functions for recommendation engine
+    """
+    item_similarity_df = pd.read_csv('./static/item_similarity_df.csv')
+    return item_similarity_df
+
+
+application.item_sim_df = load_recommendations()
 
 
 """
@@ -53,8 +71,6 @@ else:
         'host': 'mongodb://localhost/movie-rec-db'
     }
     logger.warning('Local Database Connected')
-
-
 db = MongoEngine(application)
 
 

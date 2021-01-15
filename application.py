@@ -1,7 +1,7 @@
 import os
 import logging
 
-from flask import Flask, jsonify, Blueprint
+from flask import Flask, jsonify, Blueprint, redirect
 from flask_cors import CORS
 from flask_restplus import Api
 from flask_caching import Cache
@@ -37,8 +37,10 @@ def load_recommendations():
     """
     Service functions for recommendation engine
     """
-    item_similarity_df = pd.read_csv('./static/item_similarity_df.csv', index_col=0)
-    print(item_similarity_df.head(10))
+
+    item_similarity_df = pd.read_csv(
+        './static/item_similarity_df.csv', index_col=0)
+
     return item_similarity_df
 
 
@@ -137,7 +139,7 @@ def revoked_token_callback():
 
 @application.route('/')
 def index():
-    return 'Hellow World!'
+    return redirect('/api/swagger')
 
 
 # run the app.

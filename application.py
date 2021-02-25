@@ -142,6 +142,10 @@ def index():
     return redirect('/api/swagger')
 
 
+def test():
+    test = "This is a test function"
+        return 1
+
 # run the app.
 if __name__ == "__main__":
     application.run()

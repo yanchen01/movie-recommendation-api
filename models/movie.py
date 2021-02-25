@@ -6,7 +6,4 @@ class Movie(me.Document):
     genre = me.ListField(me.StringField(required=True))
 
     def json(self):
-        return {
-            'name': self.name,
-            'genre': self.genre
-        }
+        return {'name': self.name, 'genre': self.genre}

@@ -7,23 +7,17 @@ from flask_restplus import Api
 from flask_caching import Cache
 from flask_jwt_extended import JWTManager
 
-
 from resources import api_blueprint
-
 
 from flask_mongoengine import MongoEngine
 from models.user import User
 
-
 import pandas as pd
-
 
 application = Flask(__name__)
 application.register_blueprint(api_blueprint)
 
 CORS(application)
-
-
 """
 Caching config0
 """
@@ -38,15 +32,13 @@ def load_recommendations():
     Service functions for recommendation engine
     """
 
-    item_similarity_df = pd.read_csv(
-        './static/item_similarity_df.csv', index_col=0)
+    item_similarity_df = pd.read_csv('./static/item_similarity_df.csv',
+                                     index_col=0)
 
     return item_similarity_df
 
 
 application.item_sim_df = load_recommendations()
-
-
 """
 Custom logger configuration
 """
@@ -58,14 +50,11 @@ log_handler.setFormatter(log_format)
 logger = logging.getLogger(__name__)
 logger.addHandler(log_handler)
 
-
 # determine local or production db
 if application.env == "production":
     # if in production env
     DB_CONNECT_STRING = f"mongodb+srv://{os.getenv('DB_USER')}:{os.getenv('DB_PASS')}@movie-rec-db.5ica7.mongodb.net/{os.getenv('DB_NAME')}?retryWrites=true&w=majority"
-    application.config['MONGODB_SETTINGS'] = {
-        "host": DB_CONNECT_STRING
-    }
+    application.config['MONGODB_SETTINGS'] = {"host": DB_CONNECT_STRING}
     logger.warning('Cloud Database Connected')
 else:
     # if in dev env
@@ -75,21 +64,18 @@ else:
     }
     logger.warning('Local Database Connected')
 db = MongoEngine(application)
-
-
 """
 JWT related configuration. The following functions includes:
 1) add claims to each jwt
 2) customize the token expired error message 
 """
-application.config['JWT_SECRET_KEY'] = os.getenv(
-    'JWT_SECRET_KEY')
+application.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(application)
 
 
 @jwt.user_claims_loader
 def add_claims_to_jwt(identity):
-    if identity == 1:   # instead of hard-coding, we should read from a config file to get a list of admins instead
+    if identity == 1:  # instead of hard-coding, we should read from a config file to get a list of admins instead
         return {'is_admin': True}
     return {'is_admin': False}
 
